@@ -39,6 +39,9 @@ jobs:
           echo "Criticidade: $RISCO"
 
           if [ "$INCIDENTE" = "true" ] && [ "$RISCO" = "CRITICO" ]; then
+            echo "Garantindo a existência da label no repositório..."
+            gh label create "incident-ai" --color "FF0000" --description "Incidentes críticos detectados por IA" --force || true
+
             echo "Alerta CRÍTICO detectado pelo Agente Groq. Criando Issue..."
             gh issue create \
               --title "[Agente Groq] Incidente Crítico: $TITULO" \
