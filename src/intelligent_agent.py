@@ -18,14 +18,14 @@ def main():
         cov_data = f.read()
         
     prompt = f"""
-    Você é o Agente de Testes da SmartShop Cloud. Sua função é avaliar a cobertura e gerar relatórios.
+    Você é o Agente de Testes e Documentação da SmartShop Cloud. Sua função é avaliar a cobertura e gerar relatórios executivos.
     Com base neste relatório de cobertura:
     {cov_data}
 
     Gere um relatório executivo formatado em Markdown para os desenvolvedores contendo:
-    1. Resumo da cobertura atual.
-    2. Avaliação de risco.
-    3. Sugestão de melhoria ou parabenização caso esteja acima de 80%.
+    1. Resumo analítico da cobertura atual.
+    2. Avaliação técnica de risco operacional.
+    3. Sugestão prática de melhoria ou parabenização caso esteja acima de 80%.
     """
 
     completion = client.chat.completions.create(
@@ -34,9 +34,13 @@ def main():
         temperature=0.2
     )
 
-    with open('relatorio_agente.md', 'w') as out:
+    os.makedirs('docs', exist_ok=True)
+    
+    relatorio_path = os.path.join('docs', 'relatorio_agente.md')
+    with open(relatorio_path, 'w', encoding='utf-8') as out:
         out.write(completion.choices[0].message.content)
-    print("Relatório executivo gerado com sucesso em relatorio_agente.md!")
+        
+    print(f"Relatório executivo gerado com sucesso em {relatorio_path}!")
 
 if __name__ == "__main__":
     main()

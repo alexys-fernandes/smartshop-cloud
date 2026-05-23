@@ -25,10 +25,10 @@ jobs:
 
       - name: Executar Testes e Gerar Cobertura
         run: |
-            pytest --cov=src --cov-report=term-missing tests/ > coverage.txt || true
-            cat coverage.txt
+          pytest --cov=src --cov-report=term-missing tests/ > coverage.txt || true
+          cat coverage.txt
 
-      - name: Validar Quality Gate via Groq API
+      - name: Validar Quality Gate e Inicializar Pastas
         env:
           GROQCLOUD_API_KEY: ${{ secrets.GROQCLOUD_API_KEY }}
         run: |

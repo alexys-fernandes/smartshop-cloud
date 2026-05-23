@@ -32,8 +32,8 @@ jobs:
         run: |
           python src/intelligent_agent.py
 
-      - name: Carregar Relatório como Artefato do Pipeline
+      - name: Carregar Relatório Técnico como Artefato da Pipeline
         uses: actions/upload-artifact@v4
         with:
           name: relatorio-executivo-agente
-          path: relatorio_agente.md
+          path: docs/relatorio_agente.md
