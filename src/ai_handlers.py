@@ -36,7 +36,7 @@ def analyze_quality_gate(coverage_report_path):
     """
     
     completion = client.chat.completions.create(
-        model="llama3-8b-8192",
+        model="llama-3.1-8b-instant",
         messages=[{"role": "user", "content": prompt}],
         temperature=0.1,
         response_format={"type": "json_object"}
@@ -80,7 +80,7 @@ def analyze_observability(log_path, metrics_path, trace_path):
     """
     
     completion = client.chat.completions.create(
-        model="llama3-8b-8192",
+        model="llama-3.1-8b-instant",
         messages=[{"role": "user", "content": prompt}],
         temperature=0.1,
         response_format={"type": "json_object"}
