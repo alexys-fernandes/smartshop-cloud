@@ -1,0 +1,14 @@
+{
+  "scanned_at": "2026-05-23T11:55:00Z",
+  "target": "SmartShop Cloud v1.0.0",
+  "vulnerabilities": [
+    {
+      "id": "SEC-001",
+      "component": "src/app.py",
+      "severity": "LOW",
+      "description": "Falta de sanitização estrita em tipos de dados de entrada de produtos, embora mitigada por tipagem estática e ValueError.",
+      "remediation": "Adicionar validação pydantic para as propriedades do carrinho de compras."
+    }
+  ],
+  "status": "SECURE"
+}
