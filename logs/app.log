@@ -1,0 +1,4 @@
+2026-05-23 11:15:01 - INFO - [SmartShop-API] Iniciando microsserviço de checkout.
+2026-05-23 11:16:42 - ERROR - [SmartShop-DB] Database timeout: conexão perdida com a instância AWS RDS Postgres após 30000ms.
+2026-05-23 11:16:45 - CRITICAL - [SmartShop-Worker] Falha na tarefa: Falha crítica na liquidação de transações via gateway.
+2026-05-23 11:18:20 - WARN - [SmartShop-Auth] Tentativas consecutivas inválidas de login para o usuário: admin.

@@ -1,0 +1,1 @@
+Frontend [200 OK] -> API Gateway [200 OK] (150ms) -> Payment Service [504 Timeout] (2850ms) -> Database [No Response]

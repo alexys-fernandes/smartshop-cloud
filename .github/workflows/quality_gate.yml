@@ -1,0 +1,35 @@
+name: SmartShop - Quality Gate com Groq IA
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  quality-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Código
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Instalar Dependências
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest pytest-cov groq
+
+      - name: Executar Testes e Gerar Cobertura
+        run: |
+            pytest --cov=src --cov-report=term-missing tests/ > coverage.txt || true
+            cat coverage.txt
+
+      - name: Validar Quality Gate via Groq API
+        env:
+          GROQCLOUD_API_KEY: ${{ secrets.GROQCLOUD_API_KEY }}
+        run: |
+          python src/ai_handlers.py quality

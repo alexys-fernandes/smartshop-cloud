@@ -1,0 +1,54 @@
+name: SmartShop - Observabilidade & Agente com Groq IA
+
+on:
+  workflow_dispatch:
+
+jobs:
+  observability-agent:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Checkout Código
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Instalar Dependências
+        run: pip install groq
+
+      - name: Executar Análise de Dados Inteligente
+        env:
+          GROQCLOUD_API_KEY: ${{ secrets.GROQCLOUD_API_KEY }}
+        run: |
+          python src/ai_handlers.py observability
+
+      - name: Agente de Incidente - Execução de Ação Autônoma
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          INCIDENTE=$(jq '.incidente_detectado' obs_result.json)
+          RISCO=$(jq -r '.nivel_risco' obs_result.json)
+          TITULO=$(jq -r '.titulo_issue' obs_result.json)
+          DESCRICAO=$(jq -r '.descricao_detalhada' obs_result.json)
+
+          echo "Status de Incidente: $INCIDENTE"
+          echo "Criticidade: $RISCO"
+
+          if [ "$INCIDENTE" = "true" ] && [ "$RISCO" = "CRITICO" ]; then
+            echo "Alerta CRÍTICO detectado pelo Agente Groq. Criando Issue..."
+            gh issue create \
+              --title "[Agente Groq] Incidente Crítico: $TITULO" \
+              --body "### 🤖 Relatório Autônomo - SmartShop Cloud
+              
+              **Nível de Risco Operacional:** $RISCO
+              
+              **Diagnóstico do Agente:**
+              $DESCRICAO" \
+              --label "bug,incident-ai"
+          else
+            echo "Métricas estabilizadas ou risco tolerável. Nenhuma ação necessária."
+          fi
