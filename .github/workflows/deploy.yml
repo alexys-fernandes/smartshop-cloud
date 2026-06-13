@@ -28,9 +28,11 @@ jobs:
 
       - name: Executar Suite de Testes e Cobertura (Pytest)
         # Regra de Boa Prática 3: Executa os testes gerando o relatório de cobertura que o deploy_gate.py espera
-        run: pytest --cov=src --cov-report=json:coverage/coverage-summary.json
+        # run: pytest --cov=src --cov-report=json:coverage/coverage-summary.json
         # Apontando apenas para o teste bom para simular aprovação total do Quality Gate
         # run: pytest tests/test_app_good.py --cov=src --cov-report=json:coverage/coverage-summary.json
+        # Apontando para o teste ruim para simular falha no Quality Gate
+        run: pytest tests/test_app_bad.py --cov=src --cov-report=json:coverage/coverage-summary.json
 
       - name: Validar Portão de Entrada (Deploy Gate IA)
         env:
