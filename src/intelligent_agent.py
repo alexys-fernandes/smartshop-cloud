@@ -3,9 +3,9 @@ import sys
 from groq import Groq
 
 def main():
-    api_key = os.environ.get('GROQCLOUD_API_KEY')
+    api_key = os.environ.get('GROQ_API_KEY')
     if not api_key:
-        print("Erro: GROQCLOUD_API_KEY não configurada.")
+        print("Erro: GROQ_API_KEY não configurada.")
         sys.exit(1)
 
     client = Groq(api_key=api_key)

@@ -28,7 +28,7 @@ jobs:
 
       - name: Agente de Testes - Gerar Relatório Executivo
         env:
-          GROQCLOUD_API_KEY: ${{ secrets.GROQCLOUD_API_KEY }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
         run: |
           python src/intelligent_agent.py
 

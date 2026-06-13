@@ -56,3 +56,16 @@ smartshop-cloud/
     ├── architecture.md         # Documentação arquitetural de topologia lógica do projeto
     └── relatorio_agente.md     # Relatório analítico gerado de forma 100% autónoma pela IA
 ```
+
+---
+
+## 🚀 Critérios de Confiabilidade e Observabilidade (SRE)
+
+### O que no projeto SmartShop Cloud seria um sinal de que o deploy não deveria ir para frente?
+
+O deploy será bloqueado imediatamente se a IA ou as ferramentas de telemetria detectarem:
+
+- **Falhas no Checkout (Erros HTTP 5xx > 1%):** Qualquer pico de erro na rota crítica de finalização de pedidos e pagamentos, evitando prejuízos financeiros imediatos.
+- **Degradação de Performance (Latência p99 > 800ms):** Aumento excessivo no tempo de resposta da API ou estouro no uso de hardware (**CPU > 80%** ou **Memória > 85%**).
+- **Instabilidade no Banco de Dados:** Erros recorrentes de conexão, timeout ou indisponibilidade da camada de persistência (MongoDB/PostgreSQL) registrados nos logs do sistema.
+- **Quebra do Quality Gate (Cobertura < 80%):** Envio de código novo ou refatorado sem a cobertura mínima de testes unitários exigida pelos critérios de qualidade do repositório.

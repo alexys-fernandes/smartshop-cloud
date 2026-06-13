@@ -44,9 +44,9 @@ O SmartShop Cloud é um sistema de carrinho de compras automatizado e integrado 
             f.write(default_arch)
 
 def get_groq_client():
-    api_key = os.getenv("GROQCLOUD_API_KEY")
+    api_key = os.getenv("GROQ_API_KEY")
     if not api_key:
-        print("Erro: GROQCLOUD_API_KEY não configurada nas variáveis de ambiente.")
+        print("Erro: GROQ_API_KEY não configurada nas variáveis de ambiente.")
         sys.exit(1)
     return Groq(api_key=api_key)
 

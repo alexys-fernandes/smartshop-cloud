@@ -1,0 +1,53 @@
+name: Production Quality Gate & Canary Deploy
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  quality-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read # Regra de Boa prática 5: Acesso mínimo de leitura de código
+      issues: write # Regra de Boa prática 5: Permissão para abrir alertas automatizados
+
+    steps:
+      - name: Checkout Código do Repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js (Ambiente SmartShop)
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18 # Ajuste para a versão do seu projeto
+          cache: 'npm'
+
+      - name: Instalar Dependências do Node.js
+        run: npm ci
+
+      - name: Executar Suite de Testes e Cobertura (Substituindo Pytest)
+        # Comando customizado para gerar o relatório JSON de cobertura do Jest
+        run: npm test -- --coverage --coverageReporters="json-summary"
+
+      - name: Configurar Python para Scripts de IA/Deploy
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Instalar SDK da Groq no Runner
+        run: pip install groq
+
+      - name: Validar Portão de Entrada (Deploy Gate IA)
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+        run: python deploy/deploy_gate.py
+
+      - name: Simular Implantação Progressiva (Canary Deploy 10% -> 50% -> 100%)
+        if: success()
+        run: python deploy/canary_simulator.py
+
+      - name: Tratar Falhas e Disparar Rollback Automático com IA
+        if: failure()
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Necessário para o gh CLI autenticar
+        run: python deploy/rollback_trigger.py

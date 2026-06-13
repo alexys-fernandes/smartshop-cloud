@@ -22,7 +22,7 @@ jobs:
 
       - name: Executar Análise de Dados Inteligente
         env:
-          GROQCLOUD_API_KEY: ${{ secrets.GROQCLOUD_API_KEY }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
         run: |
           python src/ai_handlers.py observability
 
