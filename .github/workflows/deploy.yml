@@ -28,11 +28,9 @@ jobs:
 
       - name: Executar Suite de Testes e Cobertura (Pytest)
         # Regra de Boa Prática 3: Executa os testes gerando o relatório de cobertura que o deploy_gate.py espera
-        # run: pytest --cov=src --cov-report=json:coverage/coverage-summary.json
-        # Apontando apenas para o teste bom para simular aprovação total do Quality Gate
-        # run: pytest tests/test_app_good.py --cov=src --cov-report=json:coverage/coverage-summary.json
-        # Apontando para o teste ruim para simular falha no Quality Gate
-        run: pytest tests/test_app_bad.py --cov=src --cov-report=json:coverage/coverage-summary.json
+        run: |
+          mkdir -p coverage
+          pytest tests/test_app_good.py tests/test_app_bad.py --cov=src --cov-report=json:coverage/coverage-summary.json
 
       - name: Validar Portão de Entrada (Deploy Gate IA)
         env:
@@ -41,7 +39,15 @@ jobs:
 
       - name: Simular Implantação Progressiva (Canary Deploy 10% -> 50% -> 100%)
         if: success()
-        run: python deploy/canary_simulator.py
+        run: |
+          mkdir -p metrics
+          echo '{
+            "cpu": 85,
+            "memory": 90,
+            "latency_ms": 950,
+            "error_rate": 6.0
+          }' > metrics/system-current.json
+          python deploy/canary_simulator.py
 
       - name: Tratar Falhas e Disparar Rollback Automático com IA
         if: failure()
