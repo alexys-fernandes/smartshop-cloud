@@ -1,4 +1,4 @@
-name: Production Quality Gate & Canary Deploy
+name: SmartShop - Production Quality Gate & Canary Deploy
 
 on:
   push:
