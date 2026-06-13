@@ -1,0 +1,10 @@
+# Ignorar o arquivo de relatório de cobertura de testes do coverage.py
+.coverage
+htmlcov/
+.cache/
+
+# Ignorar arquivos compilados do Python e diretórios pycache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
