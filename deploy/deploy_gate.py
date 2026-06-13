@@ -7,27 +7,23 @@ def carregar_contexto(raiz: Path) -> dict:
     """Lê os artefatos de cobertura e logs do projeto smartshop-cloud."""
     contexto = {}
     
-    # Adaptado para ler a cobertura gerada pelo Jest no Node.js
-    # Procurando pelo arquivo gerado pelo Jest (coverage-summary.json ou coverage.json)
+    # Aponta para o relatório gerado pelo Pytest no pipeline
     coverage_path = raiz / "coverage" / "coverage-summary.json"
-    if not coverage_path.exists():
-        # Fallback para coverage.json na raiz ou pasta coverage
-        coverage_path = raiz / "coverage" / "coverage.json"
-        
+    
     if coverage_path.exists():
         try:
             dados = json.loads(coverage_path.read_text(encoding="utf-8"))
-            # O Jest summary costuma estruturar por {"total": {"lines": {"pct": 85}}}
-            if "total" in dados and "lines" in dados["total"]:
+            
+            # Ajuste para ler o formato nativo do Pytest Cov JSON
+            if "totals" in dados and "percent_covered" in dados["totals"]:
+                contexto["cobertura_pct"] = dados["totals"]["percent_covered"]
+            elif "total" in dados and "lines" in dados["total"]: # Formato Jest
                 contexto["cobertura_pct"] = dados["total"]["lines"].get("pct", 0)
-            elif "totals" in dados: # Formato genérico
-                contexto["cobertura_pct"] = dados.get("totals", {}).get("percent_covered", 0)
             else:
                 contexto["cobertura_pct"] = 0
         except Exception:
             contexto["cobertura_pct"] = 0
     else:
-        # Se não achar o JSON, define 0 para forçar validação via logs ou rejeição segura
         contexto["cobertura_pct"] = 0
 
     # Ler logs da aplicação na pasta logs/
