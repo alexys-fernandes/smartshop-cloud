@@ -15,26 +15,20 @@ jobs:
       - name: Checkout Código do Repositório
         uses: actions/checkout@v4
 
-      - name: Configurar Node.js (Ambiente SmartShop)
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18 # Ajuste para a versão do seu projeto
-          cache: 'npm'
-
-      - name: Instalar Dependências do Node.js
-        run: npm ci
-
-      - name: Executar Suite de Testes e Cobertura (Substituindo Pytest)
-        # Comando customizado para gerar o relatório JSON de cobertura do Jest
-        run: npm test -- --coverage --coverageReporters="json-summary"
-
-      - name: Configurar Python para Scripts de IA/Deploy
+      - name: Configurar Python para Testes e IA
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: '3.11'
+          cache: 'pip' # Ativa o cache nativo para o ecossistema Python
 
-      - name: Instalar SDK da Groq no Runner
-        run: pip install groq
+      - name: Instalar Dependências (Pip)
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest pytest-cov groq
+
+      - name: Executar Suite de Testes e Cobertura (Pytest)
+        # Regra de Boa Prática 3: Executa os testes gerando o relatório de cobertura que o deploy_gate.py espera
+        run: pytest --cov=src --cov-report=json:coverage/coverage-summary.json
 
       - name: Validar Portão de Entrada (Deploy Gate IA)
         env:
